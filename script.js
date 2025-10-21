@@ -78,23 +78,30 @@ function initializeApp() {
     const isDesktop = window.matchMedia('(hover: hover)').matches;
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-    // 15-second timer to disable button movement
-    setTimeout(() => {
+    // 15-second timer to disable button movement (desktop only)
+    if (isDesktop) {
+        setTimeout(() => {
+            buttonMovementEnabled = false;
+            fireButton.style.transition = 'all 0.3s ease';
+            fireButton.style.position = 'static';
+            fireButton.style.left = 'auto';
+            fireButton.style.top = 'auto';
+            fireButton.style.transform = 'scale(1.1)';
+            fireButton.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.8)';
+            
+            // Add a subtle pulse effect to indicate it's now clickable
+            setInterval(() => {
+                if (!buttonMovementEnabled) {
+                    fireButton.style.transform = fireButton.style.transform === 'scale(1.1)' ? 'scale(1.05)' : 'scale(1.1)';
+                }
+            }, 1000);
+        }, 15000); // 15 seconds
+    } else {
+        // On mobile, button is immediately clickable (no timer needed)
         buttonMovementEnabled = false;
-        fireButton.style.transition = 'all 0.3s ease';
-        fireButton.style.position = 'static';
-        fireButton.style.left = 'auto';
-        fireButton.style.top = 'auto';
-        fireButton.style.transform = 'scale(1.1)';
-        fireButton.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.8)';
-        
-        // Add a subtle pulse effect to indicate it's now clickable
-        setInterval(() => {
-            if (!buttonMovementEnabled) {
-                fireButton.style.transform = fireButton.style.transform === 'scale(1.1)' ? 'scale(1.05)' : 'scale(1.1)';
-            }
-        }, 1000);
-    }, 15000); // 15 seconds
+        fireButton.style.transform = 'scale(1.05)';
+        fireButton.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.6)';
+    }
 
     // Function to get random position within viewport bounds
     function getRandomPosition(mouseX, mouseY) {
@@ -149,7 +156,7 @@ function initializeApp() {
         }, 300); // Shorter cooldown
     }
 
-    // Mouse movement detection for desktop
+    // Desktop behavior: Button runs away from mouse
     if (isDesktop) {
         document.addEventListener('mousemove', (e) => {
             // Only move button if movement is enabled
@@ -187,19 +194,17 @@ function initializeApp() {
         }, 2000); // Check every 2 seconds
     }
 
-    // Mobile-specific behavior
+    // Mobile behavior: Button stays stationary in center
     if (isMobile) {
-        // On mobile, make the button slightly easier to tap initially
-        // but still move it around occasionally
-        setInterval(() => {
-            if (!buttonMovementEnabled) return;
-            
-            if (!isMoving && Math.random() < 0.05) { // 5% chance on mobile (less frequent)
-                const randomX = Math.random() * (window.innerWidth - 120);
-                const randomY = Math.random() * (window.innerHeight - 120);
-                moveButton(randomX, randomY);
-            }
-        }, 3000); // Check every 3 seconds on mobile
+        // Ensure button is centered and stationary on mobile
+        fireButton.style.position = 'static';
+        fireButton.style.left = 'auto';
+        fireButton.style.top = 'auto';
+        fireButton.style.transform = 'none';
+        fireButton.style.transition = 'all 0.3s ease';
+        
+        // No movement behavior on mobile - button stays put
+        console.log('Mobile detected: Button will remain stationary');
     }
 
     // Button click handler
