@@ -256,36 +256,75 @@ body {
     }
 }
 
-/* Responsive design */
+/* Mobile-first responsive design */
 @media (max-width: 768px) {
+    body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
     .top-right-container {
         top: 15px;
         right: 15px;
+        gap: 8px;
     }
 
     .coffee-button {
-        padding: 8px 12px;
-        font-size: 0.8rem;
+        padding: 10px 14px;
+        font-size: 0.85rem;
+        min-height: 44px;
+        /* iOS touch target minimum */
+        touch-action: manipulation;
     }
 
     .view-counter {
-        padding: 6px 10px;
-        font-size: 0.7rem;
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        min-height: 32px;
     }
 
     .fire-button {
-        width: 100px;
-        height: 100px;
-        font-size: 1.1rem;
+        width: 120px;
+        height: 120px;
+        font-size: 1rem;
+        min-height: 44px;
+        /* iOS touch target minimum */
+        touch-action: manipulation;
     }
 
     .modal {
-        margin: 1rem;
+        margin: 0.5rem;
         padding: 1.5rem;
+        max-width: calc(100vw - 1rem);
+        max-height: calc(100vh - 1rem);
+        overflow-y: auto;
     }
 
     .modal-title {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
+        line-height: 1.2;
+    }
+
+    .modal-message {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    .modal-ok {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+        min-height: 48px;
+        touch-action: manipulation;
+    }
+
+    .modal-close {
+        width: 36px;
+        height: 36px;
+        font-size: 1.4rem;
+        top: 12px;
+        right: 12px;
+        touch-action: manipulation;
     }
 }
 
@@ -293,21 +332,66 @@ body {
     .top-right-container {
         top: 10px;
         right: 10px;
+        gap: 6px;
     }
 
     .coffee-button {
-        padding: 6px 10px;
-        font-size: 0.75rem;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-height: 44px;
     }
 
     .view-counter {
-        padding: 5px 8px;
-        font-size: 0.65rem;
+        padding: 6px 10px;
+        font-size: 0.7rem;
+        min-height: 28px;
     }
 
     .fire-button {
-        width: 90px;
-        height: 90px;
+        width: 100px;
+        height: 100px;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+
+    .modal {
+        margin: 0.25rem;
+        padding: 1rem;
+        max-width: calc(100vw - 0.5rem);
+    }
+
+    .modal-title {
+        font-size: 1.2rem;
+    }
+
+    .modal-message {
+        font-size: 0.9rem;
+    }
+
+    .modal-ok {
+        padding: 12px 24px;
         font-size: 1rem;
+        min-height: 44px;
+    }
+}
+
+/* Extra small devices (320px and below) */
+@media (max-width: 320px) {
+    .fire-button {
+        width: 80px;
+        height: 80px;
+        font-size: 0.8rem;
+    }
+
+    .modal {
+        padding: 0.75rem;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+    }
+
+    .modal-message {
+        font-size: 0.85rem;
     }
 }

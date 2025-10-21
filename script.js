@@ -45,6 +45,7 @@ let buttonMovementEnabled = true;
 
 // Check if device supports hover (desktop)
 const isDesktop = window.matchMedia('(hover: hover)').matches;
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
 // 15-second timer to disable button movement
 setTimeout(() => {
@@ -153,6 +154,21 @@ if (isDesktop) {
             moveButton(randomX, randomY);
         }
     }, 2000); // Check every 2 seconds
+}
+
+// Mobile-specific behavior
+if (isMobile) {
+    // On mobile, make the button slightly easier to tap initially
+    // but still move it around occasionally
+    setInterval(() => {
+        if (!buttonMovementEnabled) return;
+
+        if (!isMoving && Math.random() < 0.05) { // 5% chance on mobile (less frequent)
+            const randomX = Math.random() * (window.innerWidth - 120);
+            const randomY = Math.random() * (window.innerHeight - 120);
+            moveButton(randomX, randomY);
+        }
+    }, 3000); // Check every 3 seconds on mobile
 }
 
 // Button click handler
