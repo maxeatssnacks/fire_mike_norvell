@@ -7,11 +7,13 @@
 
 body {
     font-family: 'Arial', sans-serif;
+    background-color: #667eea; /* Fallback color */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     background-image: url('images/FSU_Sparklers.jpeg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -19,6 +21,35 @@ body {
     justify-content: center;
     overflow-x: hidden;
     position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+/* Fallback for mobile Safari */
+@supports (-webkit-touch-callout: none) {
+    body {
+        background-attachment: scroll;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+}
+
+/* Ensure content is visible even if background fails */
+.fire-button {
+    z-index: 10;
+    position: relative;
+}
+
+.top-right-container {
+    z-index: 10;
+    position: relative;
+}
+
+/* Mobile Safari specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+    body {
+        background-attachment: scroll;
+    }
 }
 
 /* Top right corner elements */
