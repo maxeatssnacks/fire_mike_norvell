@@ -4,12 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function initializeApp() {
-    // Hide debug element
-    const debugTest = document.getElementById('debug-test');
-    if (debugTest) {
-        debugTest.style.display = 'none';
-    }
-
     // Get DOM elements with error checking
     const fireButton = document.getElementById('fireButton');
     const modalOverlay = document.getElementById('modalOverlay');
