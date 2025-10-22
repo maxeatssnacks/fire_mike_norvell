@@ -1,0 +1,435 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #667eea;
+    /* Fallback color */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-image: url('images/FSU_Sparklers.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+/* Fallback for mobile Safari */
+@supports (-webkit-touch-callout: none) {
+    body {
+        background-attachment: scroll;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+}
+
+/* Ensure content is visible even if background fails */
+.fire-button {
+    z-index: 10;
+    position: relative;
+}
+
+.top-right-container {
+    z-index: 10;
+    position: relative;
+}
+
+/* Mobile Safari specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+    body {
+        background-attachment: scroll;
+    }
+}
+
+/* Top right corner elements */
+.top-right-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.coffee-button {
+    background: linear-gradient(145deg, #ff6b35, #f7931e);
+    color: white;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.coffee-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+    background: linear-gradient(145deg, #ff7a4a, #ffa31e);
+}
+
+.view-counter {
+    background: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+
+/* Fire button */
+.fire-button {
+    background: linear-gradient(145deg, #ff0000, #cc0000, #990000);
+    color: white;
+    border: 3px solid #ff4444;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    user-select: none;
+    padding: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    will-change: transform;
+}
+
+/* Eject button glow effect */
+.fire-button::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fire-button:hover::before {
+    opacity: 1;
+}
+
+.fire-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(255, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    background: linear-gradient(145deg, #ff1111, #dd0000, #aa0000);
+}
+
+.fire-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    background: linear-gradient(145deg, #ee0000, #bb0000, #880000);
+}
+
+/* Modal overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+/* Modal content */
+.modal {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9) translateY(-20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.show .modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ccc;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.modal-close:hover {
+    background: #999;
+}
+
+.modal-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.modal-message {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.klarna-link {
+    color: #ff6b35;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.klarna-link:hover {
+    color: #e55a2b;
+    text-decoration: underline;
+}
+
+.modal-ok {
+    background: linear-gradient(145deg, #e91e63, #c2185b);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+}
+
+.modal-ok:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    .top-right-container {
+        top: 15px;
+        right: 15px;
+        gap: 8px;
+    }
+
+    .coffee-button {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+        min-height: 44px;
+        /* iOS touch target minimum */
+        touch-action: manipulation;
+    }
+
+    .view-counter {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        min-height: 32px;
+    }
+
+    .fire-button {
+        width: 120px;
+        height: 120px;
+        font-size: 1rem;
+        min-height: 44px;
+        /* iOS touch target minimum */
+        touch-action: manipulation;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        transform: scale(1.05) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        will-change: transform;
+    }
+
+    .modal {
+        margin: 0.5rem;
+        padding: 1.5rem;
+        max-width: calc(100vw - 1rem);
+        max-height: calc(100vh - 1rem);
+        overflow-y: auto;
+    }
+
+    .modal-title {
+        font-size: 1.4rem;
+        line-height: 1.2;
+    }
+
+    .modal-message {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    .modal-ok {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+        min-height: 48px;
+        touch-action: manipulation;
+    }
+
+    .modal-close {
+        width: 36px;
+        height: 36px;
+        font-size: 1.4rem;
+        top: 12px;
+        right: 12px;
+        touch-action: manipulation;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-right-container {
+        top: 10px;
+        right: 10px;
+        gap: 6px;
+    }
+
+    .coffee-button {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-height: 44px;
+    }
+
+    .view-counter {
+        padding: 6px 10px;
+        font-size: 0.7rem;
+        min-height: 28px;
+    }
+
+    .fire-button {
+        width: 100px;
+        height: 100px;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+
+    .modal {
+        margin: 0.25rem;
+        padding: 1rem;
+        max-width: calc(100vw - 0.5rem);
+    }
+
+    .modal-title {
+        font-size: 1.2rem;
+    }
+
+    .modal-message {
+        font-size: 0.9rem;
+    }
+
+    .modal-ok {
+        padding: 12px 24px;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+}
+
+/* Extra small devices (320px and below) */
+@media (max-width: 320px) {
+    .fire-button {
+        width: 80px;
+        height: 80px;
+        font-size: 0.8rem;
+    }
+
+    .modal {
+        padding: 0.75rem;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+    }
+
+    .modal-message {
+        font-size: 0.85rem;
+    }
+}

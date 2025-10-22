@@ -4,7 +4,7 @@
     "description": "Interactive Fire Mike Norvell landing page",
     "main": "index.html",
   "scripts": {
-    "build": "echo 'Static site'"
+    "build": "echo 'Files are in public directory'"
   },
     "dependencies": {},
     "devDependencies": {},
