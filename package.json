@@ -4,9 +4,7 @@
     "description": "Interactive Fire Mike Norvell landing page",
     "main": "index.html",
   "scripts": {
-    "dev": "vercel dev",
-    "build": "echo 'Static site - no build needed'",
-    "start": "echo 'Static site'"
+    "build": "echo 'Static site'"
   },
     "dependencies": {},
     "devDependencies": {},
