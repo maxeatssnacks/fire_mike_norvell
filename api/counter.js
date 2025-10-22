@@ -1,46 +1,26 @@
-// Vercel serverless function for persistent counter
-import fs from 'fs';
-import path from 'path';
-
+// Free CountAPI counter - no charges, truly persistent
 export default async function handler(req, res) {
-    const filePath = path.join(process.cwd(), 'data', 'counter.json');
-
     try {
         if (req.method === 'GET') {
-            // Read current count
-            let count = 0;
-            try {
-                const data = fs.readFileSync(filePath, 'utf8');
-                count = JSON.parse(data).count;
-            } catch (error) {
-                // File doesn't exist, start with 0
-            }
+            // Get current count from CountAPI
+            const response = await fetch('https://api.countapi.xyz/get/fire-mike-norvell/visits');
+            const data = await response.json();
+            res.status(200).json({ count: data.value || 0 });
 
-            res.status(200).json({ count });
         } else if (req.method === 'POST') {
-            // Increment count
-            let count = 0;
-            try {
-                const data = fs.readFileSync(filePath, 'utf8');
-                count = JSON.parse(data).count;
-            } catch (error) {
-                // File doesn't exist, start with 0
-            }
+            // Increment count using CountAPI
+            const response = await fetch('https://api.countapi.xyz/hit/fire-mike-norvell/visits');
+            const data = await response.json();
+            res.status(200).json({ count: data.value || 0 });
 
-            count++;
-
-            // Ensure data directory exists
-            const dataDir = path.dirname(filePath);
-            if (!fs.existsSync(dataDir)) {
-                fs.mkdirSync(dataDir, { recursive: true });
-            }
-
-            // Write updated count
-            fs.writeFileSync(filePath, JSON.stringify({ count }));
-
-            res.status(200).json({ count });
+        } else {
+            res.status(405).json({ error: 'Method not allowed' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Failed to update counter' });
+        console.error('CountAPI error:', error);
+        res.status(500).json({
+            error: 'Failed to update counter',
+            details: error.message
+        });
     }
 }

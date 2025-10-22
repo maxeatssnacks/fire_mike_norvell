@@ -1,0 +1,23 @@
+{
+    "name": "fire-mike-norvell",
+    "version": "1.0.0",
+    "description": "Interactive Fire Mike Norvell landing page",
+    "main": "index.html",
+    "scripts": {
+        "dev": "vercel dev",
+        "build": "echo 'No build step needed'",
+        "start": "echo 'Static site'"
+    },
+    "dependencies": {},
+    "devDependencies": {},
+    "keywords": [
+        "fire",
+        "mike",
+        "norvell",
+        "florida",
+        "state",
+        "fsu"
+    ],
+    "author": "Max Rautenkranz",
+    "license": "MIT"
+}
