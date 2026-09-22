@@ -2,6 +2,43 @@
 // and settles back in the center, clickable
 const MAX_DODGES = 4;
 
+// Redis-powered persistent counter. Resolves to the number to display;
+// falls back to a per-browser localStorage count if the API is unavailable.
+async function fetchViewCount() {
+    try {
+        // Use Redis counter API
+        const response = await fetch('/api/counter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Redis API response not ok');
+        }
+        const data = await response.json();
+        console.log('Redis counter successful:', data.count);
+        return data.count;
+    } catch (error) {
+        console.log('Redis failed, using localStorage fallback:', error.message);
+        // Fallback to localStorage if Redis fails
+        try {
+            let currentViews = parseInt(localStorage.getItem('pageViews') || '0');
+            currentViews++;
+            localStorage.setItem('pageViews', currentViews.toString());
+            return currentViews;
+        } catch (localError) {
+            console.error('localStorage also failed:', localError);
+            return 1;
+        }
+    }
+}
+
+// Kick off the counter request right away, before the DOM is ready, so the
+// number is on its way while the rest of the page initializes
+const viewCountPromise = fetchViewCount();
+
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', function () {
     initializeApp();
@@ -21,52 +58,12 @@ function initializeApp() {
         return;
     }
 
-    // Redis-powered persistent view counter
-    async function updateViewCount() {
-        try {
-            // Check if we're in a browser environment
-            if (typeof window === 'undefined' || !window.fetch) {
-                throw new Error('Browser environment not ready');
-            }
-
-            // Use Redis counter API
-            const response = await fetch('/api/counter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (viewCount) {
-                    viewCount.textContent = data.count;
-                }
-                console.log('Redis counter successful:', data.count);
-            } else {
-                throw new Error('Redis API response not ok');
-            }
-        } catch (error) {
-            console.log('Redis failed, using localStorage fallback:', error.message);
-            // Fallback to localStorage if Redis fails
-            try {
-                let currentViews = parseInt(localStorage.getItem('pageViews') || '0');
-                currentViews++;
-                localStorage.setItem('pageViews', currentViews.toString());
-                if (viewCount) {
-                    viewCount.textContent = currentViews;
-                }
-            } catch (localError) {
-                console.error('localStorage also failed:', localError);
-                if (viewCount) {
-                    viewCount.textContent = '1';
-                }
-            }
-        }
+    // Replace the placeholder with the count once it arrives
+    if (viewCount) {
+        viewCountPromise.then((count) => {
+            viewCount.textContent = count;
+        });
     }
-
-    // Initialize view counter on page load
-    updateViewCount();
 
     // Button movement variables
     let isMoving = false;

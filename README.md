@@ -5,7 +5,7 @@ Interactive landing page with an elusive button that runs away from your mouse!
 ## Features
 
 - 🎯 **Elusive Button**: Runs away from mouse on desktop, stationary on mobile
-- 📊 **Persistent Counter**: Uses Upstash Redis for a global page-view count
+- 📊 **Persistent Counter**: "Norvell Fans" is a global page-view count stored in Upstash Redis
 - ☕ **Buy Me a Coffee**: Integrated donation button
 - 📱 **Mobile Optimized**: Touch-friendly design
 - 🎨 **FSU Themed**: Florida State University background and styling
