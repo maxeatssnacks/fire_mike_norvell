@@ -1,3 +1,7 @@
+// How many times the button dodges the mouse on desktop before it gives up
+// and settles back in the center, clickable
+const MAX_DODGES = 4;
+
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', function () {
     initializeApp();
@@ -68,34 +72,35 @@ function initializeApp() {
     let isMoving = false;
     let moveTimeout;
     let buttonMovementEnabled = true;
+    let dodgesLeft = MAX_DODGES;
 
     // Check if device supports hover (desktop)
     const isDesktop = window.matchMedia('(hover: hover)').matches;
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-    // 15-second timer to disable button movement (desktop only)
-    if (isDesktop) {
-        setTimeout(() => {
-            buttonMovementEnabled = false;
-            fireButton.style.transition = 'all 0.3s ease';
-            fireButton.style.position = 'static';
-            fireButton.style.left = 'auto';
-            fireButton.style.top = 'auto';
-            fireButton.style.transform = 'scale(1.1)';
-            fireButton.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.8)';
-
-            // Add a subtle pulse effect to indicate it's now clickable
-            setInterval(() => {
-                if (!buttonMovementEnabled) {
-                    fireButton.style.transform = fireButton.style.transform === 'scale(1.1)' ? 'scale(1.05)' : 'scale(1.1)';
-                }
-            }, 1000);
-        }, 15000); // 15 seconds
-    } else {
-        // On mobile, button is immediately clickable (no timer needed)
+    if (!isDesktop) {
+        // On mobile, button is immediately clickable
         buttonMovementEnabled = false;
         fireButton.style.transform = 'scale(1.05)';
         fireButton.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.6)';
+    }
+
+    // Once the dodge budget is spent: stop moving, return the button to the
+    // normal document flow (its original centered spot) and cue that it's clickable
+    function settleButton() {
+        buttonMovementEnabled = false;
+        clearTimeout(moveTimeout);
+        fireButton.style.transition = 'all 0.3s ease';
+        fireButton.style.position = 'static';
+        fireButton.style.left = 'auto';
+        fireButton.style.top = 'auto';
+        fireButton.style.transform = 'scale(1.1)';
+        fireButton.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.8)';
+
+        // Add a subtle pulse effect to indicate it's now clickable
+        setInterval(() => {
+            fireButton.style.transform = fireButton.style.transform === 'scale(1.1)' ? 'scale(1.05)' : 'scale(1.1)';
+        }, 1000);
     }
 
     // Function to get random position within viewport bounds
@@ -134,11 +139,12 @@ function initializeApp() {
         return { x: randomX, y: randomY };
     }
 
-    // Function to move button to random position
+    // Function to move button to random position (one dodge from the budget)
     function moveButton(mouseX, mouseY) {
-        if (isMoving) return;
+        if (isMoving || dodgesLeft <= 0) return;
 
         isMoving = true;
+        dodgesLeft--;
         const newPos = getRandomPosition(mouseX, mouseY);
 
         fireButton.style.transition = 'all 0.3s ease'; // Faster movement
@@ -146,9 +152,13 @@ function initializeApp() {
         fireButton.style.left = newPos.x + 'px';
         fireButton.style.top = newPos.y + 'px';
 
+        // Cooldown matches the transition, so one mouse pass counts as one dodge
         setTimeout(() => {
             isMoving = false;
-        }, 300); // Shorter cooldown
+            if (dodgesLeft === 0) {
+                settleButton();
+            }
+        }, 300);
     }
 
     // Desktop behavior: Button runs away from mouse
@@ -176,17 +186,6 @@ function initializeApp() {
                 }, randomDelay);
             }
         });
-
-        // Additional difficulty: move button randomly even when mouse isn't close
-        setInterval(() => {
-            if (!buttonMovementEnabled) return; // Stop random movement after timer
-
-            if (!isMoving && Math.random() < 0.1) { // 10% chance every interval
-                const randomX = Math.random() * window.innerWidth;
-                const randomY = Math.random() * window.innerHeight;
-                moveButton(randomX, randomY);
-            }
-        }, 2000); // Check every 2 seconds
     }
 
     // Mobile behavior: Button stays stationary in center

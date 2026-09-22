@@ -44,7 +44,7 @@ Connect your GitHub repository to Vercel and deploy. The static site is served f
 
 ## Mobile vs Desktop
 
-- **Desktop**: Button runs away from mouse for 15 seconds, then becomes clickable
+- **Desktop**: Button dodges the mouse 4 times (`MAX_DODGES` in `public/script.js`), then settles back in the center and becomes clickable
 - **Mobile**: Button stays stationary and is immediately clickable
 
 ## Files Structure
