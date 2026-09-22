@@ -202,18 +202,15 @@ function initializeApp() {
         console.log('Mobile detected: Button will remain stationary');
     }
 
-    // Button click handler
+    // Button click handler (show/hide is driven purely by the .show class;
+    // the CSS handles the fade and visibility)
     fireButton.addEventListener('click', () => {
         modalOverlay.classList.add('show');
-        modalOverlay.style.display = 'flex';
     });
 
     // Modal close handlers
     function closeModal() {
         modalOverlay.classList.remove('show');
-        setTimeout(() => {
-            modalOverlay.style.display = 'none';
-        }, 300); // Match the CSS transition duration
     }
 
     modalClose.addEventListener('click', closeModal);
